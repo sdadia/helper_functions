@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
 
 
 def PLOT_IMAGE(image, figure_num=1, show=False):
@@ -118,8 +119,8 @@ def PLOT_COLOR_HISTOGRAM(img, show = True, color = ('b','g','r')):
         plt.plot(histr,color = col, label = str(color[i]) )
         plt.xlabel("Pixel Intensity")
         plt.ylabel("Frequency")
-        max_pixel_intensity = np.max(np.max(img[:,:,0]), np.max(img[:,:,1]), np.max(img[:,:,2]))
-        min_pixel_intensity = np.min(np.min(img[:,:,0]), np.min(img[:,:,1]), np.min(img[:,:,2]))
+        max_pixel_intensity = max(np.max(img[:,:,0]),np.max(img[:,:,1]), np.max(img[:,:,2]))
+        min_pixel_intensity = max(np.min(img[:,:,0]), np.min(img[:,:,1]), np.min(img[:,:,2]))
         plt.xlim([min_pixel_intensity, max_pixel_intensity])
         plt.legend()
     if (show is True):
@@ -149,8 +150,8 @@ def PLOT_GRAY_HISTOGRAM(img, show = True):
         plt.plot(histr,color = col, label='Frequency count')
         plt.xlabel("Pixel Intensity")
         plt.ylabel("Frequency")
-        max_pixel_intensity = np.max(np.max(img[:,:]))
-        min_pixel_intensity = np.min(np.min(img[:,:]))
+        max_pixel_intensity = max(0,np.max(img[:,:]))
+        min_pixel_intensity = min(0,np.min(img[:,:]))
         plt.xlim([min_pixel_intensity, max_pixel_intensity])
         plt.legend()
     if (show is True):

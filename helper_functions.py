@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import sys
 
 
-def PLOT_img_MAT(img, figure_num=1, show=False):
+def PLOT_IMG_MAT(img, figure_num=1, show=False):
     '''
     Show img matplotlib style
 
@@ -57,7 +57,7 @@ def GINPUT_ROUTINE(img, num_pts=-1):
     return coordinates.astype(np.uint8) # Return +ve integers only
 
 
-def RESIZE_img(img, fx1, fy1):
+def RESIZE_IMG(img, fx1, fy1):
     '''
     Function to resize img
 
@@ -80,7 +80,7 @@ def RESIZE_img(img, fx1, fy1):
         print("img incorrect/img is NONE")
 
 
-def PLOT_img_CV(img,  wait_time=0, window_name="name"):
+def PLOT_IMG_CV(img,  wait_time=0, window_name="name"):
     '''
     Show's img on OpenCV format
 

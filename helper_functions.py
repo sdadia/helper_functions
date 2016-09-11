@@ -1,10 +1,13 @@
+''' This file is a package contains helper functions for opencv and images '''
+
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
 
-def PLOT_IMAGE(image, figure_num=1, show=False):
+def PLOT_IMAGE_MAT(image, figure_num=1, show=False):
     '''
     Parameters
     ------------
@@ -22,6 +25,7 @@ def PLOT_IMAGE(image, figure_num=1, show=False):
     plt.figure(figure_num)
     plt.imshow(image)
     plt.axis("off") # Don't show coordinate axis
+
     if(show is True): # Show image if asked
         plt.show()
     return None
@@ -44,8 +48,7 @@ def GINPUT_ROUTINE(image, num_pts=-1):
     '''
     PLOT_IMAGE(image, show=False)
     print("Please select" + str(num_pts) + "points")
-    # timeout : time(sec) to wait until termination, if input not given
-    coordinates = plt.ginput(n=num_pts, timeout=0)
+    coordinates = plt.ginput(n=num_pts, timeout=0) # timeout : time(sec) to wait until termination, if input not given
     coordinates = np.array(coordinates)
     coordinates[:, 0], coordinates[:, 1] = coordinates[:, 1], coordinates[:, 0].copy() # Exchange col1 and col2 to get (row_coordinate, col_coordinate)
 
@@ -56,7 +59,7 @@ def RESIZE_IMAGE(image1, fx1, fy1):
     '''
     Function to resize the image
 
-    Parameters:
+    Parameters
     ------------
     image1 : Numpy array
         Image to be resized

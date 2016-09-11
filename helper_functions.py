@@ -1,4 +1,4 @@
-''' This file is a package contains helper functions for opencv and images '''
+''' This file is a package contains helper functions for opencv and imgs '''
 
 
 import cv2
@@ -7,12 +7,14 @@ import matplotlib.pyplot as plt
 import sys
 
 
-def PLOT_IMAGE_MAT(image, figure_num=1, show=False):
+def PLOT_img_MAT(img, figure_num=1, show=False):
     '''
+    Show img matplotlib style
+
     Parameters
     ------------
-    image : Numpy array
-        Image to be shown
+    img : Numpy array
+        img to be shown
     figure_num : (Optional) int
         Figure number
     show : (Optional) bool
@@ -23,30 +25,30 @@ def PLOT_IMAGE_MAT(image, figure_num=1, show=False):
     None
     '''
     plt.figure(figure_num)
-    plt.imshow(image)
+    plt.imshow(img)
     plt.axis("off") # Don't show coordinate axis
 
-    if(show is True): # Show image if asked
+    if(show is True): # Show img if asked
         plt.show()
     return None
 
 
-def GINPUT_ROUTINE(image, num_pts=-1):
+def GINPUT_ROUTINE(img, num_pts=-1):
     '''
-    Get coordinates of points in image, click middle click to end
+    Get coordinates of points in img, click middle click to end
     If num_pts == -1, then choose points indefinately until middle click of mouse
 
     Parameters
     ------------
-    image : Numpy array
-        Image where points are to be selected
+    img : Numpy array
+        img where points are to be selected
 
     Returns
     ------------
     coordinates : Numpy array
         Numpy array containing the coordinates of the points (row,col) format
     '''
-    PLOT_IMAGE(image, show=False)
+    PLOT_img(img, show=False)
     print("Please select" + str(num_pts) + "points")
     coordinates = plt.ginput(n=num_pts, timeout=0) # timeout : time(sec) to wait until termination, if input not given
     coordinates = np.array(coordinates)
@@ -55,14 +57,14 @@ def GINPUT_ROUTINE(image, num_pts=-1):
     return coordinates.astype(np.uint8) # Return +ve integers only
 
 
-def RESIZE_IMAGE(image, fx1, fy1):
+def RESIZE_img(img, fx1, fy1):
     '''
-    Function to resize the image
+    Function to resize img
 
     Parameters
     ------------
-    image1 : Numpy array
-        Image to be resized
+    img1 : Numpy array
+        img to be resized
     fx1 : float
         Horizontal stretch (>0.1)
     fy1 : float
@@ -70,43 +72,43 @@ def RESIZE_IMAGE(image, fx1, fy1):
 
     Returns
     ------------
-    Resized image
+    Resized img
     '''
-    if(image != None):
-        return cv2.resize(image, (0, 0), fx=fx1, fy=fy1)
+    if(img != None):
+        return cv2.resize(img, (0, 0), fx=fx1, fy=fy1)
     else:
-        print("Image incorrect/Image is NONE")
+        print("img incorrect/img is NONE")
 
 
-def PLOT_IMAGE_CV(image,  wait_time=0, window_name="name"):
+def PLOT_img_CV(img,  wait_time=0, window_name="name"):
     '''
-    Show's image on OpenCV format
+    Show's img on OpenCV format
 
     Parameters
     ------------
-    image : Numpy array
-        Image to show
+    img : Numpy array
+        img to show
     window_name : (Optional) String
         Window name
     wait_time : (Optional) int
-        Wait time before closng the window automatically
+        Wait time before closng the window automatically. If zero, then waits indefinately for user input
 
     Returns
     ------------
     None
     '''
-    cv2.imshow(window_name, image)
+    cv2.imshow(window_name, img)
     cv2.waitKey(wait_time) and 0xFF
 
 
-def PLOT_COLOR_HISTOGRAM(image, show = True, color = ('b','g','r')):
+def PLOT_COLOR_HISTOGRAM(img, show = True, color = ('b','g','r')):
     '''
-    Plot color histogram of image
+    Plot color histogram of img
 
     Parameters
     ------------
-    image : Numpy array
-        Image whose histogram is to be calculated
+    img : Numpy array
+        img whose histogram is to be calculated
     show : (Optional) bool
         If true shows O/P immediately, else you need to type plt.show()
     color : (Optional) Tuple of strings
@@ -118,26 +120,26 @@ def PLOT_COLOR_HISTOGRAM(image, show = True, color = ('b','g','r')):
     '''
     color = ('blue','green','red')
     for i,col in enumerate(color):
-        histr = cv2.calcHist([image],[i],None,[256],[0,256])
+        histr = cv2.calcHist([img],[i],None,[256],[0,256])
         plt.plot(histr,color = col, label = str(color[i]) )
         plt.xlabel("Pixel Intensity")
         plt.ylabel("Frequency")
-        max_pixel_intensity = max(np.max(image[:,:,0]),np.max(image[:,:,1]), np.max(image[:,:,2]))
-        min_pixel_intensity = max(np.min(image[:,:,0]), np.min(image[:,:,1]), np.min(image[:,:,2]))
+        max_pixel_intensity = max(np.max(img[:,:,0]),np.max(img[:,:,1]), np.max(img[:,:,2]))
+        min_pixel_intensity = max(np.min(img[:,:,0]), np.min(img[:,:,1]), np.min(img[:,:,2]))
         plt.xlim([min_pixel_intensity, max_pixel_intensity])
         plt.legend()
     if (show is True):
         plt.show()
 
 
-def PLOT_GRAY_HISTOGRAM(image, show = True):
+def PLOT_GRAY_HISTOGRAM(img, show = True):
     '''
-    Plot color histogram of image
+    Plot color histogram of img
 
     Parameters
     ------------
-    image : Numpy array
-        Image whose histogram is to be calculated
+    img : Numpy array
+        img whose histogram is to be calculated
     show : (Optional) bool
         If true shows O/P immediately, else you need to type plt.show()
     color : (Optional) Tuple of strings
@@ -149,12 +151,12 @@ def PLOT_GRAY_HISTOGRAM(image, show = True):
     '''
     color = ('k')
     for i,col in enumerate(color):
-        histr = cv2.calcHist([image],[i],None,[256],[0,256])
+        histr = cv2.calcHist([img],[i],None,[256],[0,256])
         plt.plot(histr,color = col, label='Frequency count')
         plt.xlabel("Pixel Intensity")
         plt.ylabel("Frequency")
-        max_pixel_intensity = max(0,np.max(image[:,:]))
-        min_pixel_intensity = min(0,np.min(image[:,:]))
+        max_pixel_intensity = max(0,np.max(img[:,:]))
+        min_pixel_intensity = min(0,np.min(img[:,:]))
         plt.xlim([min_pixel_intensity, max_pixel_intensity])
         plt.legend()
     if (show is True):

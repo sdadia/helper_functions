@@ -1,0 +1,6 @@
+Python helper function for opencv and images
+
+To install type 
+
+sudo pip2 install helper_functions # For python 2
+sudo pip3 install helper_functions # For python 3

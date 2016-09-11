@@ -161,3 +161,58 @@ def PLOT_GRAY_HISTOGRAM(img, show = True):
         plt.legend()
     if (show is True):
         plt.show()
+
+
+def SOBEL(gimg):
+    '''
+    Return `Sobel` edge derivative image
+
+    Parameters
+    ------------
+    gimg : 8 bit image
+        8 bit gray scale image or 8 bit single channel image
+
+    Returns
+    ------------
+    GMag : Numpy Array
+        Numpy array of Magnitude of resultant X and Y gradient
+    GMag_Norm : Numpy array
+        Numpy array of Normalized Magnitude of resultant X and Y gradient, for viewing purpose.
+     '''
+
+    scale = 1
+    delta = 0
+    ddepth = cv2.CV_32F
+    # Computing the X- and Y-Gradients, using the Sobel kernel
+    grad_x = cv2.Sobel(
+        gimg,
+        ddepth,
+        1,
+        0,
+        ksize=3,
+        scale=scale,
+        delta=delta,
+        borderType=cv2.BORDER_DEFAULT)
+    grad_y = cv2.Sobel(
+        gimg,
+        ddepth,
+        0,
+        1,
+        ksize=3,
+        scale=scale,
+        delta=delta,
+        borderType=cv2.BORDER_DEFAULT)
+
+    # Absolute Gradient for Display purposes --- Remove in future, not needed
+    abs_grad_x = cv2.convertScaleAbs(grad_x)
+    abs_grad_y = cv2.convertScaleAbs(grad_y)
+
+    # Gradient magnitude computation  --- Magnitude of the field --- Also for display
+    g1 = grad_x * grad_x
+    g2 = grad_y * grad_y
+    GMag = np.sqrt(g1 + g2)  # Actual magnitude of the gradient
+
+    # Normalized gradient 0-255 scale, and 0-1 scale --- For Display
+    GMag_Norm = np.uint8(GMag * 255.0 / Gmag.max())  # Magnitude, for display
+
+    return GMag, GMag_Norm

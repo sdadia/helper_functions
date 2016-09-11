@@ -55,7 +55,7 @@ def GINPUT_ROUTINE(image, num_pts=-1):
     return coordinates.astype(np.uint8) # Return +ve integers only
 
 
-def RESIZE_IMAGE(image1, fx1, fy1):
+def RESIZE_IMAGE(image, fx1, fy1):
     '''
     Function to resize the image
 
@@ -72,19 +72,19 @@ def RESIZE_IMAGE(image1, fx1, fy1):
     ------------
     Resized image
     '''
-    if(image1 != None):
-        return cv2.resize(image1, (0, 0), fx=fx1, fy=fy1)
+    if(image != None):
+        return cv2.resize(image, (0, 0), fx=fx1, fy=fy1)
     else:
         print("Image incorrect/Image is NONE")
 
 
-def PLOT_IMAGE_CV(img,  wait_time=0, window_name="name"):
+def PLOT_IMAGE_CV(image,  wait_time=0, window_name="name"):
     '''
     Show's image on OpenCV format
 
     Parameters
     ------------
-    img : Numpy array
+    image : Numpy array
         Image to show
     window_name : (Optional) String
         Window name
@@ -95,17 +95,17 @@ def PLOT_IMAGE_CV(img,  wait_time=0, window_name="name"):
     ------------
     None
     '''
-    cv2.imshow(window_name, img)
+    cv2.imshow(window_name, image)
     cv2.waitKey(wait_time) and 0xFF
 
 
-def PLOT_COLOR_HISTOGRAM(img, show = True, color = ('b','g','r')):
+def PLOT_COLOR_HISTOGRAM(image, show = True, color = ('b','g','r')):
     '''
     Plot color histogram of image
 
     Parameters
     ------------
-    img : Numpy array
+    image : Numpy array
         Image whose histogram is to be calculated
     show : (Optional) bool
         If true shows O/P immediately, else you need to type plt.show()
@@ -118,25 +118,25 @@ def PLOT_COLOR_HISTOGRAM(img, show = True, color = ('b','g','r')):
     '''
     color = ('blue','green','red')
     for i,col in enumerate(color):
-        histr = cv2.calcHist([img],[i],None,[256],[0,256])
+        histr = cv2.calcHist([image],[i],None,[256],[0,256])
         plt.plot(histr,color = col, label = str(color[i]) )
         plt.xlabel("Pixel Intensity")
         plt.ylabel("Frequency")
-        max_pixel_intensity = max(np.max(img[:,:,0]),np.max(img[:,:,1]), np.max(img[:,:,2]))
-        min_pixel_intensity = max(np.min(img[:,:,0]), np.min(img[:,:,1]), np.min(img[:,:,2]))
+        max_pixel_intensity = max(np.max(image[:,:,0]),np.max(image[:,:,1]), np.max(image[:,:,2]))
+        min_pixel_intensity = max(np.min(image[:,:,0]), np.min(image[:,:,1]), np.min(image[:,:,2]))
         plt.xlim([min_pixel_intensity, max_pixel_intensity])
         plt.legend()
     if (show is True):
         plt.show()
 
 
-def PLOT_GRAY_HISTOGRAM(img, show = True):
+def PLOT_GRAY_HISTOGRAM(image, show = True):
     '''
     Plot color histogram of image
 
     Parameters
     ------------
-    img : Numpy array
+    image : Numpy array
         Image whose histogram is to be calculated
     show : (Optional) bool
         If true shows O/P immediately, else you need to type plt.show()
@@ -149,12 +149,12 @@ def PLOT_GRAY_HISTOGRAM(img, show = True):
     '''
     color = ('k')
     for i,col in enumerate(color):
-        histr = cv2.calcHist([img],[i],None,[256],[0,256])
+        histr = cv2.calcHist([image],[i],None,[256],[0,256])
         plt.plot(histr,color = col, label='Frequency count')
         plt.xlabel("Pixel Intensity")
         plt.ylabel("Frequency")
-        max_pixel_intensity = max(0,np.max(img[:,:]))
-        min_pixel_intensity = min(0,np.min(img[:,:]))
+        max_pixel_intensity = max(0,np.max(image[:,:]))
+        min_pixel_intensity = min(0,np.min(image[:,:]))
         plt.xlim([min_pixel_intensity, max_pixel_intensity])
         plt.legend()
     if (show is True):

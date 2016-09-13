@@ -49,14 +49,18 @@ def GINPUT_ROUTINE(img, num_pts=-1):
     coordinates : Numpy array
         Numpy array containing the coordinates of the points (row,col) format
     '''
-    # PLOT_IMG_MAT(img, show=True)
+    Nrows, Ncol = img.shape[0], img.shape[1]
     plt.figure()
     plt.imshow(img)
-    print("Please select" + str(num_pts) + "points")
+    # Add instruction of what to do
+    if num_pts <=0:
+        plt.text(int(Ncol*0.3),-50,"Select any number of points") # First argument is coulm and second argument is row
+    else:
+        plt.text(int(Ncol*0.3),-50,("Select " +  str(num_pts) +  " of points")) # First argument is coulm and second argument is row
+    # print("Please select " + str(num_pts) + " points")
     coordinates = plt.ginput(n=num_pts, timeout=0) # timeout : time(sec) to wait until termination, if input not given
     coordinates = np.array(coordinates)
-    # Exchange col1 and col2 to get in the form (row_coordinate, col_coordinate)
-    # Advance slicing
+    # Exchange col1 and col2 to get in the form (row_coordinate, col_coordinate) using advance slicing
     coordinates[:,[0, 1]] = coordinates[:,[1, 0]]
     coordinates = np.floor(coordinates) # Floor to make them integers
 
@@ -314,3 +318,34 @@ class TIMERS:
                 print("Time : " + str((self.end_time-self.start_time)*1000) + "  Milli-seconds")
             else:
                 print("Time : " + str(self.end_time-self.start_time) + "  seconds")
+
+
+def PUT_TXT_IMG_cv(img, message, location=None):
+    '''
+    Display text on image
+
+    Parameters
+    ------------
+    img : Numpy array
+        Image on which text is to be put
+    message : String
+        Text to be put on the image
+    location : (Optional) tuple
+        Location of the message in (col, row) form. If not supplied, then puts message in top corner
+
+    Returns
+    ------------
+    None
+    '''
+    if (len(img.shape) == 3): # if color image, then use Red color to write the text
+        if (location is None):
+            r, c , colors = img.shape
+            cv2.putText(img, text=message, org=(int(0.1*r),int(0.1*c)), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=(0,0,255), thickness=2, lineType=8)
+        else:
+            cv2.putText(img, text=message, org=location,fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=(0,0,255), thickness=2, lineType=8)
+    else: # if color image, then use Gray color to write the text
+        if (location is None):
+            r, c , colors = img.shape
+            cv2.putText(img, text=message, org=(int(0.1*r),int(0.1*c)), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=(150), thickness=2, lineType=8)
+        else:
+            cv2.putText(img, text=message, org=location,fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=(150), thickness=2, lineType=8)

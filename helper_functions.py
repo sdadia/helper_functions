@@ -5,9 +5,10 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+import time
 
 
-def PLOT_IMG_MAT(img, figure_num=1, show=False):
+def PLOT_IMG_MAT(img, figure_num=1, show=True):
     '''
     Show img matplotlib style
 
@@ -48,13 +49,18 @@ def GINPUT_ROUTINE(img, num_pts=-1):
     coordinates : Numpy array
         Numpy array containing the coordinates of the points (row,col) format
     '''
-    PLOT_img(img, show=False)
+    # PLOT_IMG_MAT(img, show=True)
+    plt.figure()
+    plt.imshow(img)
     print("Please select" + str(num_pts) + "points")
     coordinates = plt.ginput(n=num_pts, timeout=0) # timeout : time(sec) to wait until termination, if input not given
     coordinates = np.array(coordinates)
-    coordinates[:, 0], coordinates[:, 1] = coordinates[:, 1], coordinates[:, 0].copy() # Exchange col1 and col2 to get (row_coordinate, col_coordinate)
+    # Exchange col1 and col2 to get in the form (row_coordinate, col_coordinate)
+    # Advance slicing
+    coordinates[:,[0, 1]] = coordinates[:,[1, 0]]
+    coordinates = np.floor(coordinates) # Floor to make them integers
 
-    return coordinates.astype(np.uint8) # Return +ve integers only
+    return coordinates.astype(int) # Return coordinates as integers
 
 
 def RESIZE_IMG(img, fx1, fy1):
@@ -216,3 +222,95 @@ def SOBEL(gimg):
     GMag_Norm = np.uint8(GMag * 255.0 / Gmag.max())  # Magnitude, for display
 
     return GMag, GMag_Norm
+
+
+class TIMERS:
+    '''
+    Timer class to time functions. Interface same as matlab (TIC and TOC)
+
+    Attributes
+    ------------
+    start_time : Starting time
+    end_time : Ending time
+
+    Useage
+    ------------
+    helper_functions.TIMERS t1;
+
+    t1.TIC()
+    .
+    ... Your CODE HERE....
+    .
+    t1.TOC()
+
+    '''
+
+    def __init__(self):
+        self.start_time = None
+        self.end_time = None
+        pass
+
+
+    def TIC(self):
+        '''
+        Starts the timer
+
+        Parameters
+        ------------
+        None
+
+        Returns
+        ------------
+        None
+        '''
+        self.start_time = time.time()
+        self.end_time = None
+
+
+    def TOC(self, show_time = True):
+        '''
+        Stops the timer and optionally prints the time between TIC and TOC
+
+        Parameters
+        ------------
+        show_time : bool
+            If true, prints the time. Else you need to explicitly call self.PRINT_TIME()
+
+        Returns
+        ------------
+        None
+        '''
+        if (self.start_time is None):
+            print("\n--- Timer not started. Use self.TIC() to start the timer ---\n")
+            # break
+        else:
+            self.end_time = time.time()
+            if (show_time):
+                if (self.end_time-self.start_time < 0.001): # if time is less than 0.001 Sec, then show time in milllsec
+                    print("Time : " + str((self.end_time-self.start_time)*1000) + "  Milli-seconds")
+                else:
+                    print("Time : " + str(self.end_time-self.start_time) + "  seconds")
+
+
+
+    def PRINT_TIME(self):
+        '''
+        Prints the time calculated between TIC and TOC
+
+        Parameters
+        ------------
+        None
+
+        Returns
+        ------------
+        None
+        '''
+        if (self.start_time is None):
+            print("Timer not started. Use self.TIC() to start the timer")
+        elif(self.end_time is None):
+            self.end_time = time.time()
+        else:
+            if (self.end_time-self.start_time < 0.001):
+                print("Time : " + str((self.end_time-self.start_time)*1000) + "  Milli-seconds")
+            else:
+                print("Time : " + str(self.end_time-self.start_time) + "  seconds")

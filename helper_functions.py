@@ -56,7 +56,7 @@ def GINPUT_ROUTINE(img, num_pts=-1):
     if num_pts <=0:
         plt.text(int(Ncol*0.3),-50,"Select any number of points") # First argument is coulm and second argument is row
     else:
-        plt.text(int(Ncol*0.3),-50,("Select " +  str(num_pts) +  " of points")) # First argument is coulm and second argument is row
+        plt.text(int(Ncol*0.3),-50,("Select " +  str(num_pts) +  " points")) # First argument is coulm and second argument is row
     # print("Please select " + str(num_pts) + " points")
     coordinates = plt.ginput(n=num_pts, timeout=0) # timeout : time(sec) to wait until termination, if input not given
     coordinates = np.array(coordinates)

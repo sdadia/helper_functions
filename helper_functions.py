@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import time
+import imutils
 
 
 def PLOT_IMG_MAT(img, figure_num=1, show=True):
@@ -34,7 +35,7 @@ def PLOT_IMG_MAT(img, figure_num=1, show=True):
     return None
 
 
-def GINPUT_ROUTINE(img, num_pts=-1):
+def GINPUT_ROUTINE(img, num_pts=-1, first_col = 'r'):
     '''
     Get coordinates of points in img, click middle click to end
     If num_pts == -1, then choose points indefinately until middle click of mouse
@@ -42,26 +43,46 @@ def GINPUT_ROUTINE(img, num_pts=-1):
     Parameters
     ------------
     img : Numpy array
-        img where points are to be selected
+        Img where points are to be selected
+    num_pts : (Optional) int
+        Number of points to be selected. If <= zero, then select point indefinately and exit using middle mouse click
+    first_col : (Optional) String
+        Indicates the coordinates in the first column.
+        If 'r', then first column of matrix indicates row coordinates.
+        If 'c', then first column of matrix indicates col coordinates.
 
     Returns
     ------------
     coordinates : Numpy array
         Numpy array containing the coordinates of the points (row,col) format
+
+    Notes
+    -----------
+    (0,0)---------------> +ve X axis / rows cordinates
+        |
+        |
+        |
+        |
+        |
+        +ve Y axis / columns cordinates
     '''
     Nrows, Ncol = img.shape[0], img.shape[1]
     plt.figure()
-    plt.imshow(img)
+    plt.imshow(imutils.opencv2matplotlib(img))
     # Add instruction of what to do
     if num_pts <=0:
         plt.text(int(Ncol*0.3),-50,"Select any number of points") # First argument is coulm and second argument is row
     else:
         plt.text(int(Ncol*0.3),-50,("Select " +  str(num_pts) +  " points")) # First argument is coulm and second argument is row
-    # print("Please select " + str(num_pts) + " points")
     coordinates = plt.ginput(n=num_pts, timeout=0) # timeout : time(sec) to wait until termination, if input not given
-    coordinates = np.array(coordinates)
-    # Exchange col1 and col2 to get in the form (row_coordinate, col_coordinate) using advance slicing
-    coordinates[:,[0, 1]] = coordinates[:,[1, 0]]
+    coordinates = np.array(coordinates) # Currenlty first column contains column coordinates
+
+    if(first_col=='r'):
+        # Exchange col1 and col2 to get in the form (row_coordinate, col_coordinate) using advance slicing
+        coordinates[:,[0, 1]] = coordinates[:,[1, 0]]
+    elif(first_col == 'c'):
+        coordinates = coordinates.copy()
+
     coordinates = np.floor(coordinates) # Floor to make them integers
 
     return coordinates.astype(int) # Return coordinates as integers
@@ -349,3 +370,109 @@ def PUT_TXT_IMG_cv(img, message, location=None):
             cv2.putText(img, text=message, org=(int(0.1*r),int(0.1*c)), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=(150), thickness=2, lineType=8)
         else:
             cv2.putText(img, text=message, org=location,fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=(150), thickness=2, lineType=8)
+
+
+def SKIP_FRAMES(video_source,num_skip):
+    '''
+    Skips frames from video
+
+    Parameters
+    ------------
+    video_source : OpenCV VideoCapture object
+        Source where video is to be skipped
+    num_skip : int
+        Number of frames to skip
+
+    Returns
+    ------------
+    None
+    '''
+    for i in range(num_skip): # num_skip incicates number of frames
+        ret, old_frame = video_source.read()
+
+
+
+def ORDER_POINTS(pts):
+    # initialzie a list of coordinates that will be ordered
+    # such that the first entry in the list is the top-left,
+    # the second entry is the top-right, the third is the
+    # bottom-right, and the fourth is the bottom-left
+    rect = np.zeros((4, 2), dtype="float32")
+
+    # the top-left point will have the smallest sum, whereas
+    # the bottom-right point will have the largest sum
+    s = pts.sum(axis=1)
+    rect[0] = pts[np.argmin(s)]
+    rect[2] = pts[np.argmax(s)]
+
+    # now, compute the difference between the points, the
+    # top-right point will have the smallest difference,
+    # whereas the bottom-left will have the largest difference
+    diff = np.diff(pts, axis=1)
+    rect[1] = pts[np.argmin(diff)]
+    rect[3] = pts[np.argmax(diff)]
+
+    # return the ordered coordinates
+    return rect
+
+
+def FOUR_POINT_TRANSFORM(img, pts):
+    '''
+    Obtain perspective transform of any image
+
+    Parameters
+    ------------
+    img : Numpy array
+        Image which is to be transformed
+
+    pts : Numpy array, shape of array is (4,2)
+        Numpy array containing coordinates of 4 points arranged in (col, row) form.
+        The coordinates should be arranged clockwise, in following order ONLY
+        top-left --> top-right --> bottom-right --> bottom-left
+
+    Returns
+    ------------
+    warped : Numpy matrix
+        Returns a transformed image
+
+    See Also
+    ------------
+    helper_functions.GINPUT_ROUTINE() to obtain points from image
+    '''
+    # obtain a consistent order of the points and unpack them
+    # individually
+    rect = ORDER_POINTS(pts)
+    (tl, tr, br, bl) = rect
+    print(tl, tr, br, bl)
+
+    # compute the width of the new image, which will be the
+    # maximum distance between bottom-right and bottom-left
+    # x-coordiates or the top-right and top-left x-coordinates
+    widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
+    widthB = np.sqrt(((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2))
+    maxWidth = max(int(widthA), int(widthB))
+
+    # compute the height of the new image, which will be the
+    # maximum distance between the top-right and bottom-right
+    # y-coordinates or the top-left and bottom-left y-coordinates
+    heightA = np.sqrt(((tr[0] - br[0]) ** 2) + ((tr[1] - br[1]) ** 2))
+    heightB = np.sqrt(((tl[0] - bl[0]) ** 2) + ((tl[1] - bl[1]) ** 2))
+    maxHeight = max(int(heightA), int(heightB))
+
+    # now that we have the dimensions of the new image, construct
+    # the set of destination points to obtain a "birds eye view",
+    # (i.e. top-down view) of the image, again specifying points
+    # in the top-left, top-right, bottom-right, and bottom-left
+    # order
+    dst = np.array([
+        [0, 0],
+        [maxWidth - 1, 0],
+        [maxWidth - 1, maxHeight - 1],
+        [0, maxHeight - 1]], dtype="float32")
+
+    # compute the perspective transform matrix and then apply it
+    M = cv2.getPerspectiveTransform(rect, dst)
+    warped = cv2.warpPerspective(img, M, (maxWidth, maxHeight))
+
+    # return the warped image
+    return warped

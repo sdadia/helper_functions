@@ -290,6 +290,7 @@ class TIMERS:
         '''
         self.start_time = time.time()
         self.end_time = None
+        self.time_recorded = None
 
 
     def TOC(self, show_time = True):
@@ -315,10 +316,11 @@ class TIMERS:
                     print("Time : " + str((self.end_time-self.start_time)*1000) + "  Milli-seconds")
                 else:
                     print("Time : " + str(self.end_time-self.start_time) + "  seconds")
+            self.time_recorded = self.end_time-self.start_time
 
 
 
-    def PRINT_TIME(self):
+    def GET_TIME(self):
         '''
         Prints the time calculated between TIC and TOC
 
@@ -333,12 +335,10 @@ class TIMERS:
         if (self.start_time is None):
             print("Timer not started. Use self.TIC() to start the timer")
         elif(self.end_time is None):
-            self.end_time = time.time()
+            print("Timer not ended. Use self.TOC() to end the timer")
         else:
-            if (self.end_time-self.start_time < 0.001):
-                print("Time : " + str((self.end_time-self.start_time)*1000) + "  Milli-seconds")
-            else:
-                print("Time : " + str(self.end_time-self.start_time) + "  seconds")
+            return (self.end_time-self.start_time)
+
 
 
 def PUT_TXT_IMG_cv(img, message, location=None):

@@ -340,8 +340,7 @@ class TIMERS:
             return (self.end_time-self.start_time)
 
 
-
-def PUT_TXT_IMG_cv(img, message, location=None):
+def PUT_TXT_IMG_CV(img, message, location=None, font_sz='s', colour=(0,0,255)):
     '''
     Display text on image
 
@@ -353,23 +352,26 @@ def PUT_TXT_IMG_cv(img, message, location=None):
         Text to be put on the image
     location : (Optional) tuple
         Location of the message in (col, row) form. If not supplied, then puts message in top corner
+    font_sz : String
+        Indicate small, medium, large font. Use 's' or 'm' or ''
 
     Returns
     ------------
     None
     '''
+    font_sizes = {'s':0.35, 'm':0.75, 'l':1.2}
     if (len(img.shape) == 3): # if color image, then use Red color to write the text
         if (location is None):
             r, c , colors = img.shape
-            cv2.putText(img, text=message, org=(int(0.1*r),int(0.1*c)), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=(0,0,255), thickness=2, lineType=8)
+            cv2.putText(img, text=message, org=(int(0.1*r),int(0.1*c)), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_sizes[font_sz], color=(0,0,255), thickness=2, lineType=8)
         else:
-            cv2.putText(img, text=message, org=location,fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=(0,0,255), thickness=2, lineType=8)
+            cv2.putText(img, text=message, org=location, fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_sizes[font_sz], color=colour, thickness=1, lineType=4)
     else: # if color image, then use Gray color to write the text
         if (location is None):
             r, c , colors = img.shape
-            cv2.putText(img, text=message, org=(int(0.1*r),int(0.1*c)), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=(150), thickness=2, lineType=8)
+            cv2.putText(img, text=message, org=(int(0.1*r),int(0.1*c)), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_sizes[font_sz], color=(150), thickness=2, lineType=5)
         else:
-            cv2.putText(img, text=message, org=location,fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=(150), thickness=2, lineType=8)
+            cv2.putText(img, text=message, org=location, fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_sizes[font_sz], color=(150), thickness=2, lineType=8)
 
 
 def SKIP_FRAMES(video_source,num_skip):
@@ -389,7 +391,6 @@ def SKIP_FRAMES(video_source,num_skip):
     '''
     for i in range(num_skip): # num_skip incicates number of frames
         ret, old_frame = video_source.read()
-
 
 
 def ORDER_POINTS(pts):

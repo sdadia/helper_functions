@@ -69,16 +69,16 @@ def GINPUT_ROUTINE(img, num_pts=-1, first_col = 'r'):
     Nrows, Ncol = img.shape[0], img.shape[1]
     plt.figure()
     plt.imshow(imutils.opencv2matplotlib(img))
-    # Add instruction of what to do
+    # Instruction of what to do
     if num_pts <=0:
-        plt.text(int(Ncol*0.3),-50,"Select any number of points") # First argument is coulm and second argument is row
+        plt.text(int(Ncol*0.3),-50,"Select any number of points") # First argument is coulum and second argument is row
     else:
         plt.text(int(Ncol*0.3),-50,("Select " +  str(num_pts) +  " points")) # First argument is coulm and second argument is row
     coordinates = plt.ginput(n=num_pts, timeout=0) # timeout : time(sec) to wait until termination, if input not given
     coordinates = np.array(coordinates) # Currenlty first column contains column coordinates
 
+    # Exchange col1 and col2 to get in the form (row_coordinate, col_coordinate) using advance slicing
     if(first_col=='r'):
-        # Exchange col1 and col2 to get in the form (row_coordinate, col_coordinate) using advance slicing
         coordinates[:,[0, 1]] = coordinates[:,[1, 0]]
     elif(first_col == 'c'):
         coordinates = coordinates.copy()
@@ -322,7 +322,7 @@ class TIMERS:
 
     def GET_TIME(self):
         '''
-        Prints the time calculated between TIC and TOC
+        Returns the time calculated between TIC and TOC
 
         Parameters
         ------------

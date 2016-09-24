@@ -2,14 +2,13 @@ from distutils.core import setup
 
 setup(
         name            =   'helper_functions',
-        # packages        =   ['helper_functions'], # this must be the same as the name above
-        version         =   '2.0.0',
+        version         =   '2.0.1',
         py_modules      =   ['helper_functions'],
         author          =   'Sahil Dadia',
         author_email    =   'dadiasahil94@yahoo.in',
         url             =   'https://github.com/sdadia/helper_functions.git',# use the URL to the github repo
         description     =   'A simple module of simple function, for opencv and python3',
-        license         =   'LICENSE.txt',
+        license         =   'MIT',
         keywords        =   ['opencv', 'helper', 'scripts'], # arbitrary keywords
         classifiers     =   [
                             'Topic :: Utilities',
@@ -19,5 +18,12 @@ setup(
                             'Operating System :: OS Independent',
                             'Programming Language :: Python :: 2',
                             'Natural Language :: English'
-                            ]
+                            ],
+        install_requires=   [
+                            'numpy',
+                            'scipy',
+                            'sklearn',
+                            'matplotlib',
+                            'imutils',
+                            ],
     )

@@ -1,6 +1,5 @@
 ''' This file is a package contains helper functions for opencv and imgs '''
 
-
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -28,14 +27,14 @@ def PLOT_IMG_MAT(img, figure_num=1, show=True):
     '''
     plt.figure(figure_num)
     plt.imshow(img)
-    plt.axis("off") # Don't show coordinate axis
+    plt.axis("off")  # Don't show coordinate axis
 
-    if(show is True): # Show img if asked
+    if (show is True):  # Show img if asked
         plt.show()
     return None
 
 
-def GINPUT_ROUTINE(img, num_pts=-1, first_col = 'r'):
+def GINPUT_ROUTINE(img, num_pts=-1, first_col='r'):
     '''
     Get coordinates of points in img, click middle click to end
     If num_pts == -1, then choose points indefinately until middle click of mouse
@@ -70,22 +69,28 @@ def GINPUT_ROUTINE(img, num_pts=-1, first_col = 'r'):
     plt.figure()
     plt.imshow(imutils.opencv2matplotlib(img))
     # Instruction of what to do
-    if num_pts <=0:
-        plt.text(int(Ncol*0.3),-50,"Select any number of points") # First argument is coulum and second argument is row
+    if num_pts <= 0:
+        plt.text(int(Ncol * 0.3), -50, "Select any number of points"
+                 )  # First argument is coulum and second argument is row
     else:
-        plt.text(int(Ncol*0.3),-50,("Select " +  str(num_pts) +  " points")) # First argument is coulm and second argument is row
-    coordinates = plt.ginput(n=num_pts, timeout=0) # timeout : time(sec) to wait until termination, if input not given
-    coordinates = np.array(coordinates) # Currenlty first column contains column coordinates
+        plt.text(int(Ncol * 0.3), -50,
+                 ("Select " + str(num_pts) + " points"
+                  ))  # First argument is coulm and second argument is row
+    coordinates = plt.ginput(
+        n=num_pts, timeout=0
+    )  # timeout : time(sec) to wait until termination, if input not given
+    coordinates = np.array(
+        coordinates)  # Currenlty first column contains column coordinates
 
     # Exchange col1 and col2 to get in the form (row_coordinate, col_coordinate) using advance slicing
-    if(first_col=='r'):
-        coordinates[:,[0, 1]] = coordinates[:,[1, 0]]
-    elif(first_col == 'c'):
+    if (first_col == 'r'):
+        coordinates[:, [0, 1]] = coordinates[:, [1, 0]]
+    elif (first_col == 'c'):
         coordinates = coordinates.copy()
 
-    coordinates = np.floor(coordinates) # Floor to make them integers
+    coordinates = np.floor(coordinates)  # Floor to make them integers
 
-    return coordinates.astype(int) # Return coordinates as integers
+    return coordinates.astype(int)  # Return coordinates as integers
 
 
 def RESIZE_IMG(img, fx1, fy1):
@@ -105,13 +110,13 @@ def RESIZE_IMG(img, fx1, fy1):
     ------------
     Resized img
     '''
-    if(img != None):
+    if (img != None):
         return cv2.resize(img, (0, 0), fx=fx1, fy=fy1)
     else:
         print("img incorrect/img is NONE")
 
 
-def PLOT_IMG_CV(img,  wait_time=0, window_name="name"):
+def PLOT_IMG_CV(img, wait_time=0, window_name="name"):
     '''
     Show's img on OpenCV format
 
@@ -132,7 +137,7 @@ def PLOT_IMG_CV(img,  wait_time=0, window_name="name"):
     cv2.waitKey(wait_time) and 0xFF
 
 
-def PLOT_COLOR_HISTOGRAM(img, show = True, color = ('b','g','r')):
+def PLOT_COLOR_HISTOGRAM(img, show=True, color=('b', 'g', 'r')):
     '''
     Plot color histogram of img
 
@@ -149,21 +154,23 @@ def PLOT_COLOR_HISTOGRAM(img, show = True, color = ('b','g','r')):
     ------------
     None
     '''
-    color = ('blue','green','red')
-    for i,col in enumerate(color):
-        histr = cv2.calcHist([img],[i],None,[256],[0,256])
-        plt.plot(histr,color = col, label = str(color[i]) )
+    color = ('blue', 'green', 'red')
+    for i, col in enumerate(color):
+        histr = cv2.calcHist([img], [i], None, [256], [0, 256])
+        plt.plot(histr, color=col, label=str(color[i]))
         plt.xlabel("Pixel Intensity")
         plt.ylabel("Frequency")
-        max_pixel_intensity = max(np.max(img[:,:,0]),np.max(img[:,:,1]), np.max(img[:,:,2]))
-        min_pixel_intensity = max(np.min(img[:,:,0]), np.min(img[:,:,1]), np.min(img[:,:,2]))
+        max_pixel_intensity = max(
+            np.max(img[:, :, 0]), np.max(img[:, :, 1]), np.max(img[:, :, 2]))
+        min_pixel_intensity = max(
+            np.min(img[:, :, 0]), np.min(img[:, :, 1]), np.min(img[:, :, 2]))
         plt.xlim([min_pixel_intensity, max_pixel_intensity])
         plt.legend()
     if (show is True):
         plt.show()
 
 
-def PLOT_GRAY_HISTOGRAM(img, show = True):
+def PLOT_GRAY_HISTOGRAM(img, show=True):
     '''
     Plot color histogram of img
 
@@ -181,13 +188,13 @@ def PLOT_GRAY_HISTOGRAM(img, show = True):
     None
     '''
     color = ('k')
-    for i,col in enumerate(color):
-        histr = cv2.calcHist([img],[i],None,[256],[0,256])
-        plt.plot(histr,color = col, label='Frequency count')
+    for i, col in enumerate(color):
+        histr = cv2.calcHist([img], [i], None, [256], [0, 256])
+        plt.plot(histr, color=col, label='Frequency count')
         plt.xlabel("Pixel Intensity")
         plt.ylabel("Frequency")
-        max_pixel_intensity = max(0,np.max(img[:,:]))
-        min_pixel_intensity = min(0,np.min(img[:,:]))
+        max_pixel_intensity = max(0, np.max(img[:, :]))
+        min_pixel_intensity = min(0, np.min(img[:, :]))
         plt.xlim([min_pixel_intensity, max_pixel_intensity])
         plt.legend()
     if (show is True):
@@ -275,7 +282,6 @@ class TIMERS:
         self.end_time = None
         pass
 
-
     def TIC(self):
         '''
         Starts the timer
@@ -292,8 +298,7 @@ class TIMERS:
         self.end_time = None
         self.time_recorded = None
 
-
-    def TOC(self, show_time = True):
+    def TOC(self, show_time=True):
         '''
         Stops the timer and optionally prints the time between TIC and TOC
 
@@ -307,18 +312,21 @@ class TIMERS:
         None
         '''
         if (self.start_time is None):
-            print("\n--- Timer not started. Use self.TIC() to start the timer ---\n")
+            print(
+                "\n--- Timer not started. Use self.TIC() to start the timer ---\n"
+            )
             # break
         else:
             self.end_time = time.time()
             if (show_time):
-                if (self.end_time-self.start_time < 0.001): # if time is less than 0.001 Sec, then show time in milllsec
-                    print("Time : " + str((self.end_time-self.start_time)*1000) + "  Milli-seconds")
+                if (self.end_time - self.start_time <
+                        0.001):  # if time is less than 0.001 Sec, then show time in milllsec
+                    print("Time : " + str((self.end_time - self.start_time) *
+                                          1000) + "  Milli-seconds")
                 else:
-                    print("Time : " + str(self.end_time-self.start_time) + "  seconds")
-            self.time_recorded = self.end_time-self.start_time
-
-
+                    print("Time : " + str(self.end_time - self.start_time) +
+                          "  seconds")
+            self.time_recorded = self.end_time - self.start_time
 
     def GET_TIME(self):
         '''
@@ -334,13 +342,17 @@ class TIMERS:
         '''
         if (self.start_time is None):
             print("Timer not started. Use self.TIC() to start the timer")
-        elif(self.end_time is None):
+        elif (self.end_time is None):
             print("Timer not ended. Use self.TOC() to end the timer")
         else:
-            return (self.end_time-self.start_time)
+            return (self.end_time - self.start_time)
 
 
-def PUT_TXT_IMG_CV(img, message, location=None, font_sz='s', colour=(0,0,255)):
+def PUT_TXT_IMG_CV(img,
+                   message,
+                   location=None,
+                   font_sz='s',
+                   colour=(0, 0, 255)):
     '''
     Display text on image
 
@@ -359,22 +371,55 @@ def PUT_TXT_IMG_CV(img, message, location=None, font_sz='s', colour=(0,0,255)):
     ------------
     None
     '''
-    font_sizes = {'s':0.35, 'm':0.75, 'l':1.2}
-    if (len(img.shape) == 3): # if color image, then use Red color to write the text
+    font_sizes = {'s': 0.35, 'm': 0.75, 'l': 1.2}
+    if (len(img.shape) ==
+            3):  # if color image, then use Red color to write the text
         if (location is None):
-            r, c , colors = img.shape
-            cv2.putText(img, text=message, org=(int(0.1*r),int(0.1*c)), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_sizes[font_sz], color=(0,0,255), thickness=2, lineType=8)
+            r, c, colors = img.shape
+            cv2.putText(
+                img,
+                text=message,
+                org=(int(0.1 * r), int(0.1 * c)),
+                fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                fontScale=font_sizes[font_sz],
+                color=(0, 0, 255),
+                thickness=2,
+                lineType=8)
         else:
-            cv2.putText(img, text=message, org=location, fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_sizes[font_sz], color=colour, thickness=1, lineType=4)
-    else: # if color image, then use Gray color to write the text
+            cv2.putText(
+                img,
+                text=message,
+                org=location,
+                fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                fontScale=font_sizes[font_sz],
+                color=colour,
+                thickness=1,
+                lineType=4)
+    else:  # if grayscale image, then use Gray color to write the text
         if (location is None):
-            r, c , colors = img.shape
-            cv2.putText(img, text=message, org=(int(0.1*r),int(0.1*c)), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_sizes[font_sz], color=(150), thickness=2, lineType=5)
+            r, c = img.shape
+            cv2.putText(
+                img,
+                text=message,
+                org=(int(0.1 * r), int(0.1 * c)),
+                fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                fontScale=font_sizes[font_sz],
+                color=(150),
+                thickness=2,
+                lineType=5)
         else:
-            cv2.putText(img, text=message, org=location, fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_sizes[font_sz], color=(150), thickness=2, lineType=8)
+            cv2.putText(
+                img,
+                text=message,
+                org=location,
+                fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                fontScale=font_sizes[font_sz],
+                color=(150),
+                thickness=2,
+                lineType=8)
 
 
-def SKIP_FRAMES(video_source,num_skip):
+def SKIP_FRAMES(video_source, num_skip):
     '''
     Skips frames from video
 
@@ -389,7 +434,7 @@ def SKIP_FRAMES(video_source,num_skip):
     ------------
     None
     '''
-    for i in range(num_skip): # num_skip incicates number of frames
+    for i in range(num_skip):  # num_skip incicates number of frames
         ret, old_frame = video_source.read()
 
 
@@ -449,15 +494,15 @@ def FOUR_POINT_TRANSFORM(img, pts):
     # compute the width of the new image, which will be the
     # maximum distance between bottom-right and bottom-left
     # x-coordiates or the top-right and top-left x-coordinates
-    widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
-    widthB = np.sqrt(((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2))
+    widthA = np.sqrt(((br[0] - bl[0])**2) + ((br[1] - bl[1])**2))
+    widthB = np.sqrt(((tr[0] - tl[0])**2) + ((tr[1] - tl[1])**2))
     maxWidth = max(int(widthA), int(widthB))
 
     # compute the height of the new image, which will be the
     # maximum distance between the top-right and bottom-right
     # y-coordinates or the top-left and bottom-left y-coordinates
-    heightA = np.sqrt(((tr[0] - br[0]) ** 2) + ((tr[1] - br[1]) ** 2))
-    heightB = np.sqrt(((tl[0] - bl[0]) ** 2) + ((tl[1] - bl[1]) ** 2))
+    heightA = np.sqrt(((tr[0] - br[0])**2) + ((tr[1] - br[1])**2))
+    heightB = np.sqrt(((tl[0] - bl[0])**2) + ((tl[1] - bl[1])**2))
     maxHeight = max(int(heightA), int(heightB))
 
     # now that we have the dimensions of the new image, construct
@@ -465,11 +510,12 @@ def FOUR_POINT_TRANSFORM(img, pts):
     # (i.e. top-down view) of the image, again specifying points
     # in the top-left, top-right, bottom-right, and bottom-left
     # order
-    dst = np.array([
-        [0, 0],
-        [maxWidth - 1, 0],
-        [maxWidth - 1, maxHeight - 1],
-        [0, maxHeight - 1]], dtype="float32")
+    dst = np.array(
+        [
+            [0, 0], [maxWidth - 1, 0], [maxWidth - 1, maxHeight - 1],
+            [0, maxHeight - 1]
+        ],
+        dtype="float32")
 
     # compute the perspective transform matrix and then apply it
     M = cv2.getPerspectiveTransform(rect, dst)

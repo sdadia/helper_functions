@@ -426,7 +426,7 @@ def SKIP_FRAMES(video_source, num_skip):
     Parameters
     ------------
     video_source : OpenCV VideoCapture object
-        Source where video is to be skipped
+        Video where frames are to be skipped
     num_skip : int
         Number of frames to skip
 

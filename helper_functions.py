@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 import sys
 import time
 import imutils
+import natsort
+from os import listdir
+from os.path import isfile, join
 
 
 def PLOT_IMG_MAT(img, figure_num=1, show=True):
@@ -36,7 +39,7 @@ def PLOT_IMG_MAT(img, figure_num=1, show=True):
 
 def GINPUT_ROUTINE(img, num_pts=-1, first_col='r'):
     '''
-    Get coordinates of points in img, click middle click to end
+    Get coordinates of points in img by clicking left mouse buttton, click middle click to end
     If num_pts == -1, then choose points indefinately until middle click of mouse
 
     Parameters
@@ -118,7 +121,7 @@ def RESIZE_IMG(img, fx1, fy1):
 
 def PLOT_IMG_CV(img, wait_time=0, window_name="name"):
     '''
-    Show's img on OpenCV format
+    Show the img in OpenCV format
 
     Parameters
     ------------
@@ -131,10 +134,12 @@ def PLOT_IMG_CV(img, wait_time=0, window_name="name"):
 
     Returns
     ------------
-    None
+    k : str
+        It is the waitkey pressed
     '''
     cv2.imshow(window_name, img)
-    cv2.waitKey(wait_time) and 0xFF
+    k = cv2.waitKey(wait_time) and 0xFF
+    return k
 
 
 def PLOT_COLOR_HISTOGRAM(img, show=True, color=('b', 'g', 'r')):
@@ -262,12 +267,13 @@ class TIMERS:
 
     Attributes
     ------------
-    start_time : Starting time
-    end_time : Ending time
+    _start_time : Starting time
+    _end_time : Ending time
 
     Useage
     ------------
-    helper_functions.TIMERS t1;
+    import helper_functions as hf
+    hf.TIMERS t1;
 
     t1.TIC()
     .
@@ -275,11 +281,16 @@ class TIMERS:
     .
     t1.TOC()
 
+    Notes
+    ------------
+    The _varname in attributes indicates the variable is private and should not
+    be accessed
+
     '''
 
     def __init__(self):
-        self.start_time = None
-        self.end_time = None
+        self._start_time = None
+        self._end_time = None
         pass
 
     def TIC(self):
@@ -294,13 +305,13 @@ class TIMERS:
         ------------
         None
         '''
-        self.start_time = time.time()
-        self.end_time = None
+        self._start_time = time.time()
+        self._end_time = None
         self.time_recorded = None
 
     def TOC(self, show_time=True):
         '''
-        Stops the timer and optionally prints the time between TIC and TOC
+        Stops the timer and optionally prints the time elapsed between TIC and TOC
 
         Parameters
         ------------
@@ -311,26 +322,26 @@ class TIMERS:
         ------------
         None
         '''
-        if (self.start_time is None):
+        if (self._start_time is None):
             print(
                 "\n--- Timer not started. Use self.TIC() to start the timer ---\n"
             )
             # break
         else:
-            self.end_time = time.time()
+            self._end_time = time.time()
             if (show_time):
-                if (self.end_time - self.start_time <
+                if (self._end_time - self._start_time <
                         0.001):  # if time is less than 0.001 Sec, then show time in milllsec
-                    print("Time : " + str((self.end_time - self.start_time) *
+                    print("Time : " + str((self._end_time - self._start_time) *
                                           1000) + "  Milli-seconds")
                 else:
-                    print("Time : " + str(self.end_time - self.start_time) +
+                    print("Time : " + str(self._end_time - self._start_time) +
                           "  seconds")
-            self.time_recorded = self.end_time - self.start_time
+            self.time_recorded = self._end_time - self._start_time
 
     def GET_TIME(self):
         '''
-        Returns the time calculated between TIC and TOC
+        Returns the time calculated between TIC and TOC in seconds
 
         Parameters
         ------------
@@ -340,12 +351,12 @@ class TIMERS:
         ------------
         None
         '''
-        if (self.start_time is None):
+        if (self._start_time is None):
             print("Timer not started. Use self.TIC() to start the timer")
-        elif (self.end_time is None):
+        elif (self._end_time is None):
             print("Timer not ended. Use self.TOC() to end the timer")
         else:
-            return (self.end_time - self.start_time)
+            return (self._end_time - self._start_time) # return time in seconds
 
 
 def PUT_TXT_IMG_CV(img,
@@ -523,3 +534,35 @@ def FOUR_POINT_TRANSFORM(img, pts):
 
     # return the warped image
     return warped
+
+def GET_FILES_IN_FOLDER(folder_name, do_sort=True):
+    '''
+    Returns a list of files in folder. It does not include the folder names inside
+    current folder
+
+    Paramters
+    ------------
+    folder_name : str
+        The input folder where files are to be found
+    do_sort : Bool
+        If true, then sorts the list naturally
+
+    Returns
+    ------------
+    only_files_in_folder : list
+        The list contining the file names in the folder
+
+    Note
+    ------------
+    Naturally sorted means --
+        ['Image1.jpg', 'image1.jpg', 'image3.jpg', 'image12.jpg', 'image15.jpg']
+    '''
+    # read files from a folder
+    only_files_in_folder = [f for f in listdir(folder_name) if isfile(join(folder_name, f))]
+
+    if(do_sort):
+        # sort the images natural sort order
+        only_files_in_folder = natsort.natsorted(only_files_in_folder)
+
+
+    return only_files_in_folder

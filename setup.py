@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
         name            =   'helper_functions',
-        version         =   '2.0.1',
+        version         =   '2.0.3',
         py_modules      =   ['helper_functions'],
         author          =   'Sahil Dadia',
         author_email    =   'dadiasahil94@yahoo.in',
@@ -17,6 +17,7 @@ setup(
                             'License :: OSI Approved :: MIT License',
                             'Operating System :: OS Independent',
                             'Programming Language :: Python :: 2',
+                            'Programming Language :: Python :: 3',
                             'Natural Language :: English'
                             ],
         install_requires=   [
@@ -25,5 +26,6 @@ setup(
                             'sklearn',
                             'matplotlib',
                             'imutils',
+                            'natsort',
                             ],
     )

@@ -70,6 +70,10 @@ def GINPUT_ROUTINE(img, num_pts=-1, first_col='r'):
     '''
     Nrows, Ncol = img.shape[0], img.shape[1]
     plt.figure()
+
+    # maximise the window
+    fig_manager = plt.get_current_fig_manager()
+    fig_manager.window.maximize()
     plt.imshow(imutils.opencv2matplotlib(img))
     # Instruction of what to do
     if num_pts <= 0:

@@ -37,7 +37,7 @@ def PLOT_IMG_MAT(img, figure_num=1, show=True):
     return None
 
 
-def GINPUT_ROUTINE(img, num_pts=-1, first_col='r'):
+def GINPUT_ROUTINE(img, num_pts=-1, first_col='r', show_maximised=False):
     '''
     Get coordinates of points in img by clicking left mouse buttton, click middle click to end
     If num_pts == -1, then choose points indefinately until middle click of mouse
@@ -72,8 +72,9 @@ def GINPUT_ROUTINE(img, num_pts=-1, first_col='r'):
     plt.figure()
 
     # maximise the window
-    fig_manager = plt.get_current_fig_manager()
-    fig_manager.window.maximize()
+    if(show_maximised):
+	    fig_manager = plt.get_current_fig_manager()
+	    fig_manager.window.maximize()
     plt.imshow(imutils.opencv2matplotlib(img))
     # Instruction of what to do
     if num_pts <= 0:

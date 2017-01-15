@@ -541,7 +541,51 @@ def FOUR_POINT_TRANSFORM(img, pts):
     return warped
 
 
-def GET_FILES_IN_FOLDER(folder_name, do_sort=True, abs_path=False):
+# def GET_FILES_IN_FOLDER(folder_name, do_sort=True, abs_path=False):
+#     '''
+#     Returns a list of files in folder. Does not recurisively scan directories inside
+#     the given folder_name
+
+#     Paramters
+#     ------------
+#     folder_name : str
+#         The input folder where files are to be found
+#     do_sort : (Optional) Bool
+#         If true, then sorts the list of files naturally
+#     abs_path : (Optional) Bool
+#     	If true, return the absolute path of the file
+#     	else, returns only the list of file in the given folder name
+
+#     Returns
+#     ------------
+#     only_files_in_folder : list
+#         The list contining the file names in the folder
+
+#     Note
+#     ------------
+#     Naturally sorted means --
+#         ['Image1.jpg', 'image1.jpg', 'image3.jpg', 'image12.jpg', 'image15.jpg']
+#     '''
+#     # read files from a folder
+#     if (not abs_path):# return file names WITHOUT absolute path 
+#         only_files_in_folder = [
+#             f for f in os.listdir(folder_name)
+#             if os.path.isfile(os.path.join(folder_name, f))
+#         ]
+#     else: # return the list file WITH ABSOLUTE of path
+#         only_files_in_folder = [
+#             os.path.abspath(f) for f in os.listdir(folder_name)
+#             if os.path.isfile(os.path.join(folder_name, f))
+#         ]
+
+#     if (do_sort):
+#         # sort the images natural sort order
+#         only_files_in_folder = natsort.natsorted(only_files_in_folder)
+
+#     return only_files_in_folder
+
+
+def GET_FILES_IN_FOLDER(folder_name, do_sort=True, path_type='absolute'):
     '''
     Returns a list of files in folder. Does not recurisively scan directories inside
     the given folder_name
@@ -552,14 +596,16 @@ def GET_FILES_IN_FOLDER(folder_name, do_sort=True, abs_path=False):
         The input folder where files are to be found
     do_sort : (Optional) Bool
         If true, then sorts the list of files naturally
-    abs_path : (Optional) Bool
-    	If true, return the absolute path of the file
-    	else, returns only the list of file in the given folder name
+    path_type : (Optional) String, default = 'abs'
+        There are 3 options for path type,
+        'absolute' : returns files with their absolute path
+        'relative' : returns files with relative path to the given folder name
+        'no_path'  : reuturns only the file list without the path name
 
     Returns
     ------------
     only_files_in_folder : list
-        The list contining the file names in the folder
+        The list contining the file names
 
     Note
     ------------
@@ -567,14 +613,19 @@ def GET_FILES_IN_FOLDER(folder_name, do_sort=True, abs_path=False):
         ['Image1.jpg', 'image1.jpg', 'image3.jpg', 'image12.jpg', 'image15.jpg']
     '''
     # read files from a folder
-    if (not abs_path):# return file names WITHOUT absolute path 
+    if (path_type is "relative"):# return file names WITHOUT absolute path 
         only_files_in_folder = [
-            f for f in os.listdir(folder_name)
+            os.path.join(folder_name, f) for f in os.listdir(folder_name)
             if os.path.isfile(os.path.join(folder_name, f))
         ]
-    else: # return the list file WITH ABSOLUTE of path
+    elif(path_type is "absolute"): # return the list file WITH ABSOLUTE of path
         only_files_in_folder = [
             os.path.abspath(f) for f in os.listdir(folder_name)
+            if os.path.isfile(os.path.join(folder_name, f))
+        ]
+    elif(path_type is "no_path"):
+        only_files_in_folder = [
+            f for f in os.listdir(folder_name)
             if os.path.isfile(os.path.join(folder_name, f))
         ]
 

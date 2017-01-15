@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
         name            =   'helper_functions',
-        version         =   '2.0.6',
+        version         =   '2.0.7',
         py_modules      =   ['helper_functions'],
         author          =   'Sahil Dadia',
         author_email    =   'dadiasahil94@yahoo.in',

@@ -20,9 +20,9 @@ def PLOT_IMG_MAT(img, figure_num=1, show=True):
     ------------
     img : Numpy array
         img to be shown
-    figure_num : (Optional) int
+    figure_num : (Optional) int, default : 1
         Figure number
-    show : (Optional) bool
+    show : (Optional) bool, default : True
         If true shows O/P immediately, else you need to type plt.show()
 
     Returns
@@ -47,9 +47,9 @@ def GINPUT_ROUTINE(img, num_pts=-1, first_col='r', show_maximised=False):
     ------------
     img : Numpy array
         Img where points are to be selected
-    num_pts : (Optional) int
+    num_pts : (Optional) int, default = -1
         Number of points to be selected. If <= zero, then select point indefinately and exit using middle mouse click
-    first_col : (Optional) String
+    first_col : (Optional) String, default = 'r'
         Indicates the coordinates in the first column.
         If 'r', then first column of matrix indicates row coordinates.
         If 'c', then first column of matrix indicates col coordinates.
@@ -156,9 +156,9 @@ def PLOT_COLOR_HISTOGRAM(img, show=True, color=('b', 'g', 'r')):
     ------------
     img : Numpy array
         img whose histogram is to be calculated
-    show : (Optional) bool
+    show : (Optional) bool, default : True
         If true shows O/P immediately, else you need to type plt.show()
-    color : (Optional) Tuple of strings
+    color : (Optional) Tuple of strings, default : ('b', 'g', 'r')
         Colors to be used
 
     Returns
@@ -380,10 +380,12 @@ def PUT_TXT_IMG_CV(img,
         Image on which text is to be put
     message : String
         Text to be put on the image
-    location : (Optional) tuple
-        Location of the message in (col, row) form. If not supplied, then puts message in top corner
-    font_sz : String
-        Indicate small, medium, large font. Use 's' or 'm' or ''
+    location : (Optional) Tuple of length 2, default : None
+        Location of the message in (col, row) form. If not supplied, then puts message in top left corner
+    font_sz : (Optional) String, default : "s" (small)
+        Indicate small, medium, large font. Use 's' or 'm' or 'l' (small, medium, large)
+    colour : (Optional) Tuple of ints , default : (0,0,255) (red color)
+        Indicates the color of message, Tuple of length 3 for color image, tuple of length 1 for grayscale
 
     Returns
     ------------

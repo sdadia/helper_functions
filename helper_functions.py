@@ -7,8 +7,9 @@ import sys
 import time
 import imutils
 import natsort
+import os
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, abspath
 
 
 def PLOT_IMG_MAT(img, figure_num=1, show=True):
@@ -72,9 +73,9 @@ def GINPUT_ROUTINE(img, num_pts=-1, first_col='r', show_maximised=False):
     plt.figure()
 
     # maximise the window
-    if(show_maximised):
-	    fig_manager = plt.get_current_fig_manager()
-	    fig_manager.window.maximize()
+    if (show_maximised):
+        fig_manager = plt.get_current_fig_manager()
+        fig_manager.window.maximize()
     plt.imshow(imutils.opencv2matplotlib(img))
     # Instruction of what to do
     if num_pts <= 0:
@@ -361,7 +362,8 @@ class TIMERS:
         elif (self._end_time is None):
             print("Timer not ended. Use self.TOC() to end the timer")
         else:
-            return (self._end_time - self._start_time) # return time in seconds
+            return (self._end_time - self._start_time
+                    )  # return time in seconds
 
 
 def PUT_TXT_IMG_CV(img,
@@ -527,10 +529,8 @@ def FOUR_POINT_TRANSFORM(img, pts):
     # in the top-left, top-right, bottom-right, and bottom-left
     # order
     dst = np.array(
-        [
-            [0, 0], [maxWidth - 1, 0], [maxWidth - 1, maxHeight - 1],
-            [0, maxHeight - 1]
-        ],
+        [[0, 0], [maxWidth - 1, 0], [maxWidth - 1, maxHeight - 1],
+         [0, maxHeight - 1]],
         dtype="float32")
 
     # compute the perspective transform matrix and then apply it
@@ -540,7 +540,8 @@ def FOUR_POINT_TRANSFORM(img, pts):
     # return the warped image
     return warped
 
-def GET_FILES_IN_FOLDER(folder_name, do_sort=True):
+
+def GET_FILES_IN_FOLDER(folder_name, do_sort=True, abs_path=False):
     '''
     Returns a list of files in folder. It does not include the folder names inside
     current folder
@@ -549,8 +550,11 @@ def GET_FILES_IN_FOLDER(folder_name, do_sort=True):
     ------------
     folder_name : str
         The input folder where files are to be found
-    do_sort : Bool
-        If true, then sorts the list naturally
+    do_sort : (Optional) Bool
+        If true, then sorts the list of files naturally
+    abs_path : (Optional) Bool
+    	If true, return the absolute path of the file
+    	else, returns only the list of file in the given folder name
 
     Returns
     ------------
@@ -563,11 +567,19 @@ def GET_FILES_IN_FOLDER(folder_name, do_sort=True):
         ['Image1.jpg', 'image1.jpg', 'image3.jpg', 'image12.jpg', 'image15.jpg']
     '''
     # read files from a folder
-    only_files_in_folder = [f for f in listdir(folder_name) if isfile(join(folder_name, f))]
+    if (not abs_path):# return file names WITHOUT absolute path 
+        only_files_in_folder = [
+            f for f in os.listdir(folder_name)
+            if os.path.isfile(join(folder_name, f))
+        ]
+    else: # return the list file WITH ABSOLUTE of path
+        only_files_in_folder = [
+            os.path.abspath(f) for f in os.listdir(folder_name)
+            if os.path.isfile(join(folder_name, f))
+        ]
 
-    if(do_sort):
+    if (do_sort):
         # sort the images natural sort order
         only_files_in_folder = natsort.natsorted(only_files_in_folder)
-
 
     return only_files_in_folder

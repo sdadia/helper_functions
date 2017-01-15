@@ -8,8 +8,6 @@ import time
 import imutils
 import natsort
 import os
-from os import listdir
-from os.path import isfile, join, abspath
 
 
 def PLOT_IMG_MAT(img, figure_num=1, show=True):
@@ -545,8 +543,8 @@ def FOUR_POINT_TRANSFORM(img, pts):
 
 def GET_FILES_IN_FOLDER(folder_name, do_sort=True, abs_path=False):
     '''
-    Returns a list of files in folder. It does not include the folder names inside
-    current folder
+    Returns a list of files in folder. Does not recurisively scan directories inside
+    the given folder_name
 
     Paramters
     ------------
@@ -572,12 +570,12 @@ def GET_FILES_IN_FOLDER(folder_name, do_sort=True, abs_path=False):
     if (not abs_path):# return file names WITHOUT absolute path 
         only_files_in_folder = [
             f for f in os.listdir(folder_name)
-            if os.path.isfile(join(folder_name, f))
+            if os.path.isfile(os.path.join(folder_name, f))
         ]
     else: # return the list file WITH ABSOLUTE of path
         only_files_in_folder = [
             os.path.abspath(f) for f in os.listdir(folder_name)
-            if os.path.isfile(join(folder_name, f))
+            if os.path.isfile(os.path.join(folder_name, f))
         ]
 
     if (do_sort):

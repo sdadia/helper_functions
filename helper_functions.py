@@ -36,7 +36,7 @@ def PLOT_IMG_MAT(img, figure_num=1, show=True):
     return None
 
 
-def GINPUT_ROUTINE(img, num_pts=-1, first_col='r', show_maximised=False):
+def GINPUT_ROUTINE(img, num_pts=-1, first_col='r', show_maximised=False, message=None):
     '''
     Get coordinates of points in img by clicking left mouse buttton, click middle click to end
     If num_pts == -1, then choose points indefinately until middle click of mouse
@@ -51,6 +51,8 @@ def GINPUT_ROUTINE(img, num_pts=-1, first_col='r', show_maximised=False):
         Indicates the coordinates in the first column.
         If 'r', then first column of matrix indicates row coordinates.
         If 'c', then first column of matrix indicates col coordinates.
+    show_maximized : Bool
+        If true, then shows the maximised window
 
     Returns
     ------------
@@ -77,17 +79,17 @@ def GINPUT_ROUTINE(img, num_pts=-1, first_col='r', show_maximised=False):
     plt.imshow(imutils.opencv2matplotlib(img))
     # Instruction of what to do
     if num_pts <= 0:
-        plt.text(int(Ncol * 0.3), -50, "Select any number of points"
-                 )  # First argument is coulum and second argument is row
+        if(message is None):
+            plt.text(int(Ncol * 0.3), -50, "Select any number of points")  # First argument is coulum and second argument is row-
+        elif(message is not None):
+            plt.text(int(Ncol * 0.3), -50,str(message))
     else:
-        plt.text(int(Ncol * 0.3), -50,
-                 ("Select " + str(num_pts) + " points"
-                  ))  # First argument is coulm and second argument is row
-    coordinates = plt.ginput(
-        n=num_pts, timeout=0
-    )  # timeout : time(sec) to wait until termination, if input not given
-    coordinates = np.array(
-        coordinates)  # Currenlty first column contains column coordinates
+        if(message is None):
+            plt.text(int(Ncol * 0.3), -50, ("Select " + str(num_pts) + " points"   ))  # First argument is coulm and second argument is row
+        elif(message is not None):
+            plt.text(int(Ncol * 0.3), -50,str(message))
+    coordinates = plt.ginput(  n=num_pts, timeout=0   )  # timeout : time(sec) to wait until termination, if input not given
+    coordinates = np.array( coordinates)  # Currenlty first column contains column coordinates
 
     # Exchange col1 and col2 to get in the form (row_coordinate, col_coordinate) using advance slicing
     if (first_col == 'r'):
@@ -96,6 +98,9 @@ def GINPUT_ROUTINE(img, num_pts=-1, first_col='r', show_maximised=False):
         coordinates = coordinates.copy()
 
     coordinates = np.floor(coordinates)  # Floor to make them integers
+
+    # close the window
+    plt.close()
 
     return coordinates.astype(int)  # Return coordinates as integers
 
@@ -142,7 +147,7 @@ def PLOT_IMG_CV(img, wait_time=0, window_name="name"):
         It is the waitkey pressed
     '''
     cv2.imshow(window_name, img)
-    k = cv2.waitKey(wait_time) and 0xFF
+    k = cv2.waitKey(wait_time) & 0xFF
     return k
 
 
@@ -425,6 +430,7 @@ def PUT_TXT_IMG_CV(img,
                 color=(150),
                 thickness=2,
                 lineType=5)
+            pr
         else:
             cv2.putText(
                 img,
@@ -535,6 +541,8 @@ def FOUR_POINT_TRANSFORM(img, pts):
 
     # compute the perspective transform matrix and then apply it
     M = cv2.getPerspectiveTransform(rect, dst)
+    print(M.shape)
+    print(M)
     warped = cv2.warpPerspective(img, M, (maxWidth, maxHeight))
 
     # return the warped image
@@ -634,3 +642,10 @@ def GET_FILES_IN_FOLDER(folder_name, do_sort=True, path_type='absolute'):
         only_files_in_folder = natsort.natsorted(only_files_in_folder)
 
     return only_files_in_folder
+
+
+
+
+
+
+
